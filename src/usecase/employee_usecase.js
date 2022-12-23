@@ -3,7 +3,7 @@ class EmployeeUseCase {
       this.EmployeeRepository = employeeRepository;
     }
   
-    async getAllemployee(filters) {
+    async getAllEmployee(filters) {
       let result = {
         isSuccess: true,
         statusCode: null,
@@ -47,6 +47,7 @@ class EmployeeUseCase {
         data: null,
       };
   
+      return
       const employee = await this.EmployeeRepository.create(data);
   
       result.isSuccess = true;
