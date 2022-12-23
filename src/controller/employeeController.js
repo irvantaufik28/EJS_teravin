@@ -3,9 +3,12 @@ const resData = require("../helper/response");
 module.exports = {
   getAllEmployee: async (req, res, next) => {
     try {
-      const result = await req.employeeUC.getAllEmployee();
+      let limit = parseInt(req.query.record);
+      let page = parseInt(req.query.page);
+     
+      const result = await req.employeeUC.getAllEmployee(limit, page);
 
-      return res.status(result.statusCode).json(resData.success(result.data));
+      return res.status(result.statusCode).json(resData.success({data: result.data, pagination: result.pagination}));
     } catch (error) {
       next(error);
     }
