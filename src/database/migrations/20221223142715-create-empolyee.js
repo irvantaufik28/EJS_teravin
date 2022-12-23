@@ -4,7 +4,6 @@ module.exports = {
     await queryInterface.createTable('Empolyees', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
         type: Sequelize.STRING
       },
@@ -17,7 +16,7 @@ module.exports = {
       mobile: {
         type: Sequelize.STRING
       },
-      BirthDate: {
+      birthDate: {
         type: Sequelize.DATE
       },
       createdAt: {
