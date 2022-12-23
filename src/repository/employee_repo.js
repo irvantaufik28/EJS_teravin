@@ -5,8 +5,17 @@ class EmployeeRepository {
     this._EmployeeModel = Employee;
   }
 
-  async getAll() {
-    const result = await this._EmployeeModel.findAll();
+  async getAllByAscending() {
+    const result = await this._EmployeeModel.findAndCountAll({
+      order: [['id', 'asc']]
+    });
+    return result;
+  }
+
+  async getAllBydescending() {
+    const result = await this._EmployeeModel.findAndCountAll({
+      order: [['id', 'asc']]
+    });
     return result;
   }
 
