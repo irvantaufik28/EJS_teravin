@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const { Employee } = require('../models');
 
 class EmployeeRepository {
@@ -14,9 +15,14 @@ class EmployeeRepository {
     return result;
   }
 
-  async getAllBydescending() {
+  async getByNameOrEmailOrMobile(employee) {
+    let condition = []
+    condition.push({ name: { [Op.like]: "%" + employee + "%" } })
     const result = await this._EmployeeModel.findAndCountAll({
-      order: [['id', 'asc']]
+      order: [['id', 'desc']],
+      where: {
+        [Op.or] : [{name:employee}, {email: employee}, {mobile: employee}]
+      }
     });
     return result;
   }
