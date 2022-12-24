@@ -10,10 +10,11 @@ class AddressRepository {
     return result;
   }
 
-  async getById(id) {
+  async getMainByEmployeeId(employeeId) {
     const result = await this._AddressModel.findOne({
       where: {
-        id,
+        employeeId,
+        mainAddress: true
       },
     });
     return result;
