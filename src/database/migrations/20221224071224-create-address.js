@@ -14,7 +14,7 @@ module.exports = {
       mainAddress: {
         type: Sequelize.BOOLEAN
       },
-      EmployeeId: {
+      employeeId: {
         type: Sequelize.INTEGER
       },
       createdAt: {

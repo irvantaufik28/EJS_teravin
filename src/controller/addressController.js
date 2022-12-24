@@ -35,7 +35,7 @@ module.exports = {
   createAddress: async (req, res, next) => {
     try {
       const address = {
-        detailAddress: req.body.firstName,
+        detailAddress: req.body.detailAddress,
         mainAddress: true,
         employeeId: req.body.employeeId,
       };

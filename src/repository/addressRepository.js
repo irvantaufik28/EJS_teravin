@@ -1,4 +1,4 @@
-const { Address } = require('../models');
+const { Address } = require("../models");
 
 class AddressRepository {
   constructor() {
@@ -14,12 +14,12 @@ class AddressRepository {
     const result = await this._AddressModel.findOne({
       where: {
         employeeId,
-        mainAddress: true
+        mainAddress: tr,
       },
     });
     return result;
-  } 
-  
+  }
+
   async getByEmployeeId(employeeId) {
     const result = await this._AddressModel.findOne({
       where: {

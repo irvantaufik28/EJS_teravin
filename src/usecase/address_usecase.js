@@ -37,8 +37,7 @@ class AddressUsecase {
       return result;
     }
 
-    const address = await this.addressRepository.getMainByEmployeeId(id)
-   
+    const address = await this.addressRepository.getMainByEmployeeId(id);
 
     result.isSuccess = true;
     result.statusCode = 200;
@@ -46,7 +45,7 @@ class AddressUsecase {
     return result;
   }
 
-  async createAddress(data) {
+  async createAddress(addressData) {
     let result = {
       isSuccess: false,
       statusCode: 400,
@@ -54,16 +53,17 @@ class AddressUsecase {
       data: null,
     };
 
-    
-
-    const verifyAddress = await this.getAllAddressByEmployeeId(data.employeeId)
-    if (verifyAddress.length === 0) {
-      data.mainAddress = false
+    addressData.mainAddress = null;
+    let verifyAddress = await this.addressRepository.getMainByEmployeeId(
+      addressData.employeeId
+    );
+    if (verifyAddress !== null) {
+      addressData.mainAddress = false;
     } else {
-      data.mainAddress = true
+      addressData.mainAddress = true;
     }
 
-    const address = await this.addressRepository.create(data);
+    const address = await this.addressRepository.create(addressData);
 
     result.isSuccess = true;
     result.statusCode = 201;

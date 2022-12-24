@@ -35,8 +35,8 @@ class EmployeeRepository {
     });
     return result;
   }
-  async update(student, id) {
-    const result = await this._EmployeeModel.update(student, {
+  async update(address, id) {
+    const result = await this._EmployeeModel.update(address, {
       where: {
         id,
       },
@@ -44,8 +44,8 @@ class EmployeeRepository {
     return result;
   }
 
-  async create(student) {
-    const result = await this._EmployeeModel.create(student);
+  async create(address) {
+    const result = await this._EmployeeModel.create(address);
     return result;
   }
 }

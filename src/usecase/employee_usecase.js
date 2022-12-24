@@ -1,6 +1,7 @@
 class EmployeeUseCase {
-  constructor(employeeRepository) {
-    this.EmployeeRepository = employeeRepository;
+  constructor(employeeRepository, addressRepository) {
+    this.employeeRepository = employeeRepository;
+    this.addressRepository = addressRepository;
   }
 
   async getAllEmployee(limit, page) {
@@ -12,7 +13,7 @@ class EmployeeUseCase {
       pagination: {},
     };
 
-    const employees = await this.EmployeeRepository.getAll(limit, page);
+    const employees = await this.employeeRepository.getAll(limit, page);
 
     let start = 0 + (page - 1) * limit;
     let end = page * limit;
@@ -52,8 +53,8 @@ class EmployeeUseCase {
       reason: null,
       data: null,
     };
-
-    const employee = await this.EmployeeRepository.getById(id);
+    const address = await this.addressRepository.getMainByEmployeeId(id)
+    const employee = await this.employeeRepository.getById(id);
     if (employee === null) {
       result.isSuccess = false;
       result.reason = "employee not found!";
@@ -87,7 +88,8 @@ class EmployeeUseCase {
       mobile: employee.mobile,
       birthDate,
       createdAt: employee.createdAt,
-      updatedAt: employee.updatedAt
+      updatedAt: employee.updatedAt,
+      address
     }
 
     result.isSuccess = true;
@@ -105,13 +107,9 @@ class EmployeeUseCase {
     };
    
     let yearDate = new Date().toISOString().replace('-', ' ').split('T')[0].replace('-', ' ').slice(2).split(' ')
-    let id = yearDate[0]+yearDate[2]+'0000'
+    data.id = yearDate[0]+yearDate[2]+'0000'
 
-    console.log(id)
-
-    return
-
-    const employee = await this.EmployeeRepository.create(data);
+    const employee = await this.employeeRepository.create(data);
 
     result.isSuccess = true;
     result.statusCode = 201;
@@ -127,14 +125,14 @@ class EmployeeUseCase {
       data: null,
     };
 
-    const employee = await this.EmployeeRepository.getById(id);
+    const employee = await this.employeeRepository.getById(id);
     if (employee === null) {
       result.isSuccess = false;
       result.reason = "employee not found!";
       return result;
     }
 
-    await this.EmployeeRepository.update(data, id);
+    await this.employeeRepository.update(data, id);
 
     result.isSuccess = true;
     result.statusCode = 201;
@@ -149,14 +147,14 @@ class EmployeeUseCase {
       data: null,
     };
 
-    const employee = await this.EmployeeRepository.getById(id);
+    const employee = await this.employeeRepository.getById(id);
     if (employee === null) {
       result.isSuccess = false;
       result.reason = "employee not found!";
       return result;
     }
 
-    await this.EmployeeRepository.delete(id);
+    await this.employeeRepository.delete(id);
 
     result.isSuccess = true;
     result.statusCode = 200;
