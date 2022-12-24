@@ -72,8 +72,10 @@ class EmployeeUseCase {
       reason: null,
       data: null,
     };
+   
+    let employeeDate = data.birthDate.toISOString().replace('-', ' ').split('T')[0].replace('-', ' ').slice(2).split(' ')
+    data.id = employeeDate[0]+employeeDate[2]
 
-    return;
     const employee = await this.EmployeeRepository.create(data);
 
     result.isSuccess = true;
