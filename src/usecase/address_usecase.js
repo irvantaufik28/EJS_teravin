@@ -80,7 +80,7 @@ class AddressUsecase {
     };
 
     const address = await this.addressRepository.getById(id);
-    if (employee === null) {
+    if (address === null) {
       result.isSuccess = false;
       result.reason = "address not found!";
       return result;

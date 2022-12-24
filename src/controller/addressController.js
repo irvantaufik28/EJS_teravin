@@ -1,12 +1,12 @@
 const resData = require("../helper/response");
 
 module.exports = {
-  getAllEmployee: async (req, res, next) => {
+  getAllAddressByEmployeeId: async (req, res, next) => {
     try {
       let limit = parseInt(req.query.record);
       let page = parseInt(req.query.page);
      
-      const result = await req.employeeUC.getAllEmployee(limit, page);
+      const result = await req.addressUC.ggetAllAddressByEmployeeId(limit, page);
 
       return res.status(result.statusCode).json(resData.success({data: result.data, pagination: result.pagination}));
     } catch (error) {
@@ -14,11 +14,11 @@ module.exports = {
     }
   },
 
-  getEmployeeById: async (req, res, next) => {
+  getMainAddressByEmployeeId: async (req, res, next) => {
     try {
       const { id } = req.params;
 
-      const result = await req.employeeUC.getEmployeeById(id);
+      const result = await req.addressUC.getMainAddressByEmployeeId(id);
 
       if (!result.isSuccess) {
         return res
@@ -32,9 +32,9 @@ module.exports = {
     }
   },
 
-  createEmployee: async (req, res, next) => {
+  createAddress: async (req, res, next) => {
     try {
-      const employee = {
+      const student = {
 
         id: req.body.id,
         name: req.body.name,
@@ -43,7 +43,7 @@ module.exports = {
         birthDate: new Date(req.body.birthDate)
       };
 
-      const result = await req.employeeUC.createEmployee(employee);
+      const result = await req.addressUC.createAddress(student);
 
       if (!result.isSuccess) {
         return res
@@ -56,16 +56,16 @@ module.exports = {
       next(error);
     }
   },
-  updateEmployee: async (req, res, next) => {
+  updateAddress: async (req, res, next) => {
     try {
       const { id } = req.params;
-      const employee = {
+      const student = {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         majorId: req.body.majorId,
       };
 
-      const result = await req.employeeUC.updateEmployee(employee, id);
+      const result = await req.addressUC.updateAddress(student, id);
 
       if (!result.isSuccess) {
         return res
@@ -79,11 +79,11 @@ module.exports = {
     }
   },
 
-  deleteEmployee: async (req, res, next) => {
+  deleteAddress: async (req, res, next) => {
     try {
       const { id } = req.params;
 
-      const result = await req.employeeUC.deleteEmployee(id);
+      const result = await req.addressUC.deleteAddress(id);
 
       if (!result.isSuccess) {
         return res
