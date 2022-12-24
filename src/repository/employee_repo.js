@@ -27,7 +27,7 @@ class EmployeeRepository {
     return result;
   }
 
-  async getId(id) {
+  async getById(id) {
     const result = await this._EmployeeModel.findOne({
       where: {
         id,

@@ -59,9 +59,40 @@ class EmployeeUseCase {
       result.reason = "employee not found!";
       return result;
     }
+    const monthName = [
+      "Januari",
+      "Febuari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Augustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ];
+
+    let date = employee.birthDate.getDate()
+    let year = employee.birthDate.getFullYear()
+    let month = monthName[employee.birthDate.getMonth()];
+
+    let birthDate = `${date} ${month} ${year}`
+    
+    const employeeValue = {
+      id: employee.id,
+      name: employee.name,
+      email: employee.email,
+      mobile: employee.mobile,
+      birthDate,
+      createdAt: employee.createdAt,
+      updatedAt: employee.updatedAt
+    }
+
     result.isSuccess = true;
     result.statusCode = 200;
-    result.data = employee;
+    result.data = employeeValue;
     return result;
   }
 
@@ -73,8 +104,12 @@ class EmployeeUseCase {
       data: null,
     };
    
-    let employeeDate = data.birthDate.toISOString().replace('-', ' ').split('T')[0].replace('-', ' ').slice(2).split(' ')
-    data.id = employeeDate[0]+employeeDate[2]
+    let yearDate = new Date().toISOString().replace('-', ' ').split('T')[0].replace('-', ' ').slice(2).split(' ')
+    let id = yearDate[0]+yearDate[2]+'0000'
+
+    console.log(id)
+
+    return
 
     const employee = await this.EmployeeRepository.create(data);
 
