@@ -60,9 +60,10 @@ module.exports = {
     try {
       const { id } = req.params;
       const employee = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        majorId: req.body.majorId,
+        name: req.body.name,
+        email: req.body.email,
+        mobile: req.body.mobile,
+        birthDate: new Date(req.body.birthDate)
       };
 
       const result = await req.employeeUC.updateEmployee(employee, id);
