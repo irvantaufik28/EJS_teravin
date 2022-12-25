@@ -4,44 +4,56 @@ class EmployeeUseCase {
     this.addressRepository = addressRepository;
   }
 
-  async getAllEmployee(limit, page) {
-    let result = {
+  async getAllEmployee(params) {
+    const result = {
       isSuccess: true,
       statusCode: null,
-      reason: null,
+      message: null,
       data: [],
       pagination: {},
     };
 
-    const employees = await this.employeeRepository.getAll(limit, page);
+    const page = params.page ?? 1;
+    const limit = parseInt(params.limit ?? 10);
+    const offset = parseInt((page - 1) * limit);
+    const include = ["addresses"];
+    const orderBy = params.orderBy ?? "createdAt";
+    const orderDirection = params.orderDir ?? "DESC";
 
-    let start = 0 + (page - 1) * limit;
-    let end = page * limit;
-    let countFiltered = employees.count;
+    const order = [[orderBy, orderDirection]];
+    const employees = await this.employeeRepository.getAll(params, {
+      offset,
+      limit,
+      order,
+      include,
+    });
 
-    result.pagination.totalRow = employees.count;
-    result.pagination.totalPage = Math.ceil(countFiltered / limit);
-    result.pagination.page = page;
-    result.pagination.limit = limit;
+    const start = 0 + (page - 1) * limit;
+    const end = page * limit;
+    const countFiltered = employees.count;
+
+    result.pagination = {
+      totalRow: employees.count,
+      totalPage: Math.ceil(countFiltered / limit),
+      page,
+      limit,
+    };
 
     if (end < countFiltered) {
       result.pagination.next = {
         page: page + 1,
-        limit,
       };
     }
 
     if (start > 0) {
       result.pagination.prev = {
         page: page - 1,
-        limit,
       };
     }
 
     result.isSuccess = true;
     result.statusCode = 200;
     result.data = employees.rows;
-    result.pagination;
 
     return result;
   }
