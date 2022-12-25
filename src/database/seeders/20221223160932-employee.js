@@ -3,10 +3,10 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert(
-      "Employees",
+      "employees",
       [
         {
-          id: "940808",
+          id: "94080008",
           name: "Angga",
           email: "angga@gmail.com",
           mobile: "082315153",
@@ -15,7 +15,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: "840808",
+          id: "84080008",
           name: "Toni",
           email: "toni@gmail.com",
           mobile: "082315153",
@@ -24,16 +24,16 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: "930808",
+          id: "93080008",
           name: "Tina",
           email: "Tina@gmail.com",
           mobile: "082311153",
-          birthDate: "19933-08-08",
+          birthDate: "1993-08-08",
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
-          id: "900108",
+          id: "90010008",
           name: "Irvan",
           email: "irvan@gmail.com",
           mobile: "082315153",
@@ -42,7 +42,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: "940801",
+          id: "94080001",
           name: "Susi",
           email: "sui@gmail.com",
           mobile: "082515153",
@@ -51,7 +51,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: "900808",
+          id: "90080008",
           name: "Anton",
           email: "anton@gmail.com",
           mobile: "082315153",
@@ -60,7 +60,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: "810808",
+          id: "81080008",
           name: "Sumanto",
           email: "sumanto@gmail.com",
           mobile: "082315153",
@@ -69,7 +69,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: "920104",
+          id: "92010004",
           name: "Kakam",
           email: "kakam@gmail.com",
           mobile: "082315153",
@@ -78,7 +78,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: "840708",
+          id: "84070008",
           name: "Lala",
           email: "lala@gmail.com",
           mobile: "082315153",
@@ -87,7 +87,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: "990101",
+          id: "99010001",
           name: "lukman",
           email: "lukman@gmail.com",
           mobile: "082315153",
@@ -96,7 +96,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: "950303",
+          id: "95030003",
           name: "Asep",
           email: "Asep@gmail.com",
           mobile: "082415113",
@@ -105,7 +105,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: "880808",
+          id: "88080008",
           name: "Asep Nurzaman",
           email: "asepnuzaman@gmail.com",
           mobile: "082315153",
@@ -114,7 +114,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: "940104",
+          id: "94010004",
           name: "Ahmad",
           email: "ahmad@gmail.com",
           mobile: "08231515123",
@@ -123,7 +123,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: "790112",
+          id: "79010012",
           name: "Sutisna",
           email: "sutisna@gmail.com",
           mobile: "082315153",
@@ -132,7 +132,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: "881201",
+          id: "88120001",
           name: "Sepudin",
           email: "saepudin@gmail.com",
           mobile: "082315153",
@@ -146,6 +146,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete("Employees", null, {});
+    await queryInterface.bulkDelete("employees", null, {});
   },
 };

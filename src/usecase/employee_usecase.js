@@ -59,54 +59,28 @@ class EmployeeUseCase {
   }
 
   async getEmployeeById(id) {
-    let result = {
+    const result = {
       isSuccess: false,
       statusCode: 404,
-      reason: null,
+      message: null,
       data: null,
     };
-    const address = await this.addressRepository.getMainByEmployeeId(id)
-    const employee = await this.employeeRepository.getById(id);
+
+    const include = ["addresses"];
+    const employee = await this.employeeRepository.getById(id, { include });
+
     if (employee === null) {
+      result.statusCode = 404;
       result.isSuccess = false;
-      result.reason = "employee not found!";
+      result.message = "employee not found!";
       return result;
     }
-    const monthName = [
-      "Januari",
-      "Febuari",
-      "Maret",
-      "April",
-      "Mei",
-      "Juni",
-      "Juli",
-      "Augustus",
-      "September",
-      "Oktober",
-      "November",
-      "Desember",
-    ];
 
-    let date = employee.birthDate.getDate()
-    let year = employee.birthDate.getFullYear()
-    let month = monthName[employee.birthDate.getMonth()];
-
-    let birthDate = `${date} ${month} ${year}`
-    
-    const employeeValue = {
-      id: employee.id,
-      name: employee.name,
-      email: employee.email,
-      mobile: employee.mobile,
-      birthDate,
-      createdAt: employee.createdAt,
-      updatedAt: employee.updatedAt,
-      address
-    }
+    const data = employee;
 
     result.isSuccess = true;
     result.statusCode = 200;
-    result.data = employeeValue;
+    result.data = data;
     return result;
   }
 
