@@ -1,8 +1,8 @@
-const { Address } = require("../models");
+const { EmployeeAddress } = require("../models");
 
 class AddressRepository {
   constructor() {
-    this._AddressModel = Address;
+    this._AddressModel = EmployeeAddress;
   }
 
   async getAll() {

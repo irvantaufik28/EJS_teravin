@@ -1,14 +1,30 @@
 const resData = require("../helper/response");
 
+
 module.exports = {
   getAllEmployee: async (req, res, next) => {
     try {
-      let limit = parseInt(req.query.record);
-      let page = parseInt(req.query.page);
-     
-      const result = await req.employeeUC.getAllEmployee(limit, page);
+      const limit = parseInt(req.query.record ?? 10);
+      const page = parseInt(req.query.page ?? 1);
 
-      return res.status(result.statusCode).json(resData.success({data: result.data, pagination: result.pagination}));
+      const params = {
+        ...req.query,
+        page,
+        limit,
+      };
+      const result = await req.employeeUC.getAllEmployee(params);
+
+      if (!result.isSuccess) {
+        return res
+          .status(result.statusCode)
+          .json(resData.failed(result.message));
+      }
+
+      return res
+        .status(result.statusCode)
+        .json(
+          resData.success({ data: result.data, pagination: result.pagination })
+        );
     } catch (error) {
       next(error);
     }
@@ -23,7 +39,7 @@ module.exports = {
       if (!result.isSuccess) {
         return res
           .status(result.statusCode)
-          .json(resData.failed(result.reason));
+          .json(resData.failed(result.message));
       }
 
       return res.status(result.statusCode).json(resData.success(result.data));
@@ -34,21 +50,20 @@ module.exports = {
 
   createEmployee: async (req, res, next) => {
     try {
-      const employee = {
-
-        id: req.body.id,
+      const request = {
         name: req.body.name,
         email: req.body.email,
         mobile: req.body.mobile,
-        birthDate: new Date(req.body.birthDate)
+        birthDate: new Date(req.body.birthDate),
+        addresses: req.body.addresses,
       };
 
-      const result = await req.employeeUC.createEmployee(employee);
+      const result = await req.employeeUC.createEmployee(request);
 
       if (!result.isSuccess) {
         return res
           .status(result.statusCode)
-          .json(resData.failed(result.reason));
+          .json(resData.failed(result.message));
       }
 
       return res.status(result.statusCode).json(resData.success(result.data));
@@ -56,22 +71,49 @@ module.exports = {
       next(error);
     }
   },
+
   updateEmployee: async (req, res, next) => {
     try {
       const { id } = req.params;
-      const employee = {
-        name: req.body.name,
-        email: req.body.email,
-        mobile: req.body.mobile,
-        birthDate: new Date(req.body.birthDate)
-      };
 
-      const result = await req.employeeUC.updateEmployee(employee, id);
+      const request = req.body;
+
+      const schema = Joi.object().keys({
+        name: Joi.string().required().optional(),
+        email: Joi.string().email().required().optional(),
+        mobile: Joi.string()
+          .regex(/^[0-9]*$/)
+          .required()
+          .optional(),
+        birthDate: Joi.date().format("YYYY-MM-DD").utc().required().optional(),
+        addresses: Joi.array()
+          .items(
+            Joi.object({
+              id: Joi.number().integer(),
+              address: Joi.string().required(),
+              isDefault: Joi.boolean(),
+            })
+          )
+          .min(1)
+          .required()
+          .optional()
+          .label("Address"),
+      });
+
+      const { error } = schema.validate(req.body);
+
+      if (error) {
+        return res
+          .status(422)
+          .json(resData.failed(error.message, { details: error.details }));
+      }
+
+      const result = await req.employeeUC.updateEmployee(request, id);
 
       if (!result.isSuccess) {
         return res
           .status(result.statusCode)
-          .json(resData.failed(result.reason));
+          .json(resData.failed(result.message));
       }
 
       return res.status(result.statusCode).json(resData.success(result.data));
@@ -89,7 +131,7 @@ module.exports = {
       if (!result.isSuccess) {
         return res
           .status(result.statusCode)
-          .json(resData.failed(result.reason));
+          .json(resData.failed(result.message));
       }
 
       return res.status(result.statusCode).json(resData.success(result.data));

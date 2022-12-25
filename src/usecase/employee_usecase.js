@@ -1,3 +1,5 @@
+const { Op, Sequelize } = require("sequelize");
+
 class EmployeeUseCase {
   constructor(employeeRepository, addressRepository) {
     this.employeeRepository = employeeRepository;
@@ -84,22 +86,59 @@ class EmployeeUseCase {
     return result;
   }
 
-  async createEmployee(data) {
-    let result = {
+  async createEmployee(request) {
+    const result = {
       isSuccess: false,
       statusCode: 400,
-      reason: null,
+      message: null,
       data: null,
     };
-   
-    let yearDate = new Date().toISOString().replace('-', ' ').split('T')[0].replace('-', ' ').slice(2).split(' ')
-    data.id = yearDate[0]+yearDate[2]+'0000'
 
-    const employee = await this.employeeRepository.create(data);
+    const lastRow = await this.employeeRepository.getLastRow({
+      date: Sequelize.where(
+        Sequelize.fn("date_part", "year", Sequelize.col("createdAt")),
+        2022
+      ),
+      [Op.and]: Sequelize.where(
+        Sequelize.fn("date_part", "month", Sequelize.col("createdAt")),
+        12
+      ),
+    });
+
+    let yearDate = new Date().toISOString().split("T")[0].slice(2).split("-");
+    let newId = `${yearDate[0]}${yearDate[1]}00001`;
+
+    if (lastRow) {
+      let newNumber = parseInt(lastRow.id.substring(4)) + 1;
+      newNumber = (newNumber + "").padStart(4, "0");
+      newId = `${yearDate[0]}${yearDate[1]}${newNumber}`;
+    }
+
+    request.id = newId;
+
+    const employee = await this.employeeRepository.create(request);
+
+    if (request.addresses && request.addresses.length > 0) {
+      const checkDefault = request.addresses.find((o) => o.isDefault === true);
+      if (!checkDefault) {
+        request.addresses[0].isDefault = true;
+      }
+      for (const reqAddress of request.addresses) {
+        reqAddress.employeeId = employee.id;
+        await this.addressRepository.create(reqAddress);
+      }
+    }
+
+    const addresses = await employee.getAddresses();
+
+    const data = {
+      employee,
+      addresses,
+    };
 
     result.isSuccess = true;
     result.statusCode = 201;
-    result.data = employee;
+    result.data = data;
     return result;
   }
 
