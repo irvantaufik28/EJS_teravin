@@ -36,6 +36,7 @@ class EmployeeRepository {
     const result = await this.employeeModel.findAndCountAll({
       where: filters,
       ...options,
+      distinct: true,
     });
 
     return result;
