@@ -97,11 +97,11 @@ class EmployeeUseCase {
     const lastRow = await this.employeeRepository.getLastRow({
       date: Sequelize.where(
         Sequelize.fn("date_part", "year", Sequelize.col("createdAt")),
-        2022
+        new Date().getFullYear()
       ),
       [Op.and]: Sequelize.where(
         Sequelize.fn("date_part", "month", Sequelize.col("createdAt")),
-        12
+        new Date().getMonth() + 1
       ),
     });
 

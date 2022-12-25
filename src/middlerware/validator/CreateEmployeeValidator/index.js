@@ -2,7 +2,7 @@ const { EmployeePayloadSchema } = require('./schema');
 const resData = require('../../../helper/response');
 
 const EmployeePayloadValidator = {
-  validatorDoctorValidation: async (req, res, next) => {
+  EmployeeValidation: async (req, res, next) => {
     const validationResult = EmployeePayloadSchema.validate(req.body);
 
     if (validationResult.error) {
