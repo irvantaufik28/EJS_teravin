@@ -14,7 +14,7 @@ class AddressRepository {
     const result = await this._AddressModel.findOne({
       where: {
         employeeId,
-        mainAddress: tr,
+        mainAddress: true,
       },
     });
     return result;

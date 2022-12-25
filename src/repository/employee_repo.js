@@ -1,51 +1,73 @@
-const { Op } = require('sequelize');
-const { Employee } = require('../models');
+const { Op } = require("sequelize");
+const { Employee } = require("../models");
 
 class EmployeeRepository {
   constructor() {
-    this._EmployeeModel = Employee;
+    this.employeeModel = Employee;
   }
 
-  async getAll(limit , offset) {
-    const result = await this._EmployeeModel.findAndCountAll({
-      order: [['id', 'desc']],
-      limit: limit,
-      offset: offset
-    });
-    return result;
-  }
+  async getAll(params, options) {
+    const filters = {};
 
-  async getByNameOrEmailOrMobile(employee) {
-    let condition = []
-    condition.push({ name: { [Op.like]: "%" + employee + "%" } })
-    const result = await this._EmployeeModel.findAndCountAll({
-      order: [['id', 'desc']],
-      where: {
-        [Op.or] : [{name:employee}, {email: employee}, {mobile: employee}]
+    if (params) {
+      const search = params.q;
+      if (search) {
+        filters[Op.or] = [
+          {
+            id: {
+              [Op.like]: `%${search}%`,
+            },
+          },
+          {
+            name: {
+              [Op.like]: `%${search}%`,
+            },
+          },
+          {
+            email: {
+              [Op.like]: `%${search}%`,
+            },
+          },
+        ];
       }
+    }
+
+    const result = await this.employeeModel.findAndCountAll({
+      where: filters,
+      ...options,
+    });
+
+    return result;
+  }
+
+  async getById(id, options = {}) {
+    const result = await this.employeeModel.findOne({
+      where: {
+        id,
+      },
+      ...options,
     });
     return result;
   }
 
-  async getById(id) {
-    const result = await this._EmployeeModel.findOne({
+  async getLastRow(params) {
+    return await this.employeeModel.findOne({
+      where: params,
+      order: [["createdAt", "desc"]],
+    });
+  }
+
+  async update(data, id) {
+    const result = await this.employeeModel.update(data, {
       where: {
         id,
       },
     });
     return result;
   }
-  async update(address, id) {
-    const result = await this._EmployeeModel.update(address, {
-      where: {
-        id,
-      },
-    });
-    return result;
-  }
 
-  async create(address) {
-    const result = await this._EmployeeModel.create(address);
+  async create(data) {
+    const result = await this.employeeModel.create(data);
     return result;
   }
 }

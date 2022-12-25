@@ -6,7 +6,7 @@ module.exports = {
       let limit = parseInt(req.query.record);
       let page = parseInt(req.query.page);
      
-      const result = await req.addressUC.ggetAllAddressByEmployeeId(limit, page);
+      const result = await req.addressUC.getAllAddressByEmployeeId(limit, page);
 
       return res.status(result.statusCode).json(resData.success({data: result.data, pagination: result.pagination}));
     } catch (error) {
