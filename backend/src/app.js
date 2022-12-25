@@ -2,10 +2,11 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
 const serverError = require('./middlerware/serverError');
 const rootRouter = require('./routes/index');
 
-const EmployeeRepository = require('./repository/employee_repo');
+const EmployeeRepository = require('./repository/employeeRepository');
 const AddressRepository = require('./repository/addressRepository');
 const EmployeeUseCase = require('./usecase/employee_usecase');
 
@@ -28,5 +29,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/v1', rootRouter);
 
 app.use(serverError);
+
+const swaggerDocument = require('./docs/docs.json');
+
+app.use(
+  '/docs',
+  swaggerUi.serveFiles(swaggerDocument),
+  swaggerUi.setup(swaggerDocument),
+);
 
 module.exports = app;
