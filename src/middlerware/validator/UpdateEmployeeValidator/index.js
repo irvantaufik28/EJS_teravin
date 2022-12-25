@@ -3,10 +3,10 @@ const resData = require('../../../helper/response');
 
 const EmployeePayloadValidator = {
   EmployeeValidation: async (req, res, next) => {
-    const validationResult = EmployeePayloadSchema.validate(req.body);
+    const { error } = EmployeePayloadSchema.validate(req.body);
 
-    if (validationResult.error) {
-      return res.status(400).json(resData.failed(validationResult.error.details[0].message));
+    if (error) {
+      return res.status(400).json(resData.failed(error.message, error.details));
     }
 
     next();

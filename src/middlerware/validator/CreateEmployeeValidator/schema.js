@@ -6,7 +6,7 @@ const EmployeePayloadSchema = Joi.object({
   mobile: Joi.string()
     .regex(/^[0-9]*$/)
     .required(),
-  birthDate: Joi.date().format('YYYY-MM-DD').utc().required(),
+  birthDate: Joi.date().format('YYYY-MM-DD').required(),
   addresses: Joi.array()
     .items(
       Joi.object({
@@ -18,6 +18,6 @@ const EmployeePayloadSchema = Joi.object({
     .required()
     .label('Address'),
 
-});
+}).options({ abortEarly: false });
 
 module.exports = { EmployeePayloadSchema };
