@@ -1,9 +1,8 @@
-const express = require("express");
+const express = require('express');
+
 const rootRouter = express.Router();
 
-const employee = require("./employee_router");
+const employee = require('./employee_router');
 
-
-
-rootRouter.use("/", employee);
+rootRouter.use('/', employee);
 module.exports = rootRouter;

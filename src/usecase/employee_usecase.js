@@ -1,4 +1,6 @@
-const { Op, Sequelize } = require("sequelize");
+/* eslint-disable radix */
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { Op, Sequelize } = require('sequelize');
 
 class EmployeeUseCase {
   constructor(employeeRepository, addressRepository) {
@@ -18,9 +20,9 @@ class EmployeeUseCase {
     const page = params.page ?? 1;
     const limit = parseInt(params.limit ?? 10);
     const offset = parseInt((page - 1) * limit);
-    const include = ["addresses"];
-    const orderBy = params.orderBy ?? "createdAt";
-    const orderDirection = params.orderDir ?? "DESC";
+    const include = ['addresses'];
+    const orderBy = params.orderBy ?? 'createdAt';
+    const orderDirection = params.orderDir ?? 'DESC';
 
     const order = [[orderBy, orderDirection]];
     const employees = await this.employeeRepository.getAll(params, {
@@ -68,13 +70,13 @@ class EmployeeUseCase {
       data: null,
     };
 
-    const include = ["addresses"];
+    const include = ['addresses'];
     const employee = await this.employeeRepository.getById(id, { include });
 
     if (employee === null) {
       result.statusCode = 404;
       result.isSuccess = false;
-      result.message = "employee not found!";
+      result.message = 'employee not found!';
       return result;
     }
 
@@ -96,21 +98,21 @@ class EmployeeUseCase {
 
     const lastRow = await this.employeeRepository.getLastRow({
       date: Sequelize.where(
-        Sequelize.fn("date_part", "year", Sequelize.col("createdAt")),
-        new Date().getFullYear()
+        Sequelize.fn('date_part', 'year', Sequelize.col('createdAt')),
+        new Date().getFullYear(),
       ),
       [Op.and]: Sequelize.where(
-        Sequelize.fn("date_part", "month", Sequelize.col("createdAt")),
-        new Date().getMonth() + 1
+        Sequelize.fn('date_part', 'month', Sequelize.col('createdAt')),
+        new Date().getMonth() + 1,
       ),
     });
 
-    let yearDate = new Date().toISOString().split("T")[0].slice(2).split("-");
+    let yearDate = new Date().toISOString().split('T')[0].slice(2).split('-');
     let newId = `${yearDate[0]}${yearDate[1]}00001`;
 
     if (lastRow) {
       let newNumber = parseInt(lastRow.id.substring(4)) + 1;
-      newNumber = (newNumber + "").padStart(4, "0");
+      newNumber = (`${newNumber}`).padStart(4, '0');
       newId = `${yearDate[0]}${yearDate[1]}${newNumber}`;
     }
 
@@ -123,6 +125,7 @@ class EmployeeUseCase {
       if (!checkDefault) {
         request.addresses[0].isDefault = true;
       }
+      // eslint-disable-next-line no-restricted-syntax
       for (const reqAddress of request.addresses) {
         reqAddress.employeeId = employee.id;
         await this.addressRepository.create(reqAddress);
@@ -153,7 +156,7 @@ class EmployeeUseCase {
     const employee = await this.employeeRepository.getById(id);
     if (employee === null) {
       result.isSuccess = false;
-      result.reason = "employee not found!";
+      result.reason = 'employee not found!';
       return result;
     }
 
@@ -175,7 +178,7 @@ class EmployeeUseCase {
     const employee = await this.employeeRepository.getById(id);
     if (employee === null) {
       result.isSuccess = false;
-      result.reason = "employee not found!";
+      result.reason = 'employee not found!';
       return result;
     }
 

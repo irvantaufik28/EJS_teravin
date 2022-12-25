@@ -1,4 +1,5 @@
-const resData = require("../helper/response");
+/* eslint-disable radix */
+const resData = require('../helper/response');
 
 module.exports = {
   getAllEmployee: async (req, res, next) => {
@@ -22,7 +23,7 @@ module.exports = {
       return res
         .status(result.statusCode)
         .json(
-          resData.success({ data: result.data, pagination: result.pagination })
+          resData.success({ data: result.data, pagination: result.pagination }),
         );
     } catch (error) {
       next(error);

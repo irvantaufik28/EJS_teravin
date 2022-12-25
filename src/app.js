@@ -1,17 +1,18 @@
-require("dotenv").config();
+require('dotenv').config();
 
-const express = require("express");
-const cors = require("cors");
-const serverError = require("./middlerware/serverError");
-const rootRouter = require("./routes/index");
+const express = require('express');
+const cors = require('cors');
+const serverError = require('./middlerware/serverError');
+const rootRouter = require('./routes/index');
 
+const EmployeeRepository = require('./repository/employee_repo');
+const AddressRepository = require('./repository/addressRepository');
+const EmployeeUseCase = require('./usecase/employee_usecase');
 
-const EmployeeRepository = require("./repository/employee_repo");
-const AddressRepository = require("./repository/addressRepository")
-const EmployeeUseCase = require("./usecase/employee_usecase");
-
-const employeeUC = new EmployeeUseCase(new EmployeeRepository(), new AddressRepository());
-
+const employeeUC = new EmployeeUseCase(
+  new EmployeeRepository(),
+  new AddressRepository(),
+);
 
 const app = express();
 
@@ -20,20 +21,11 @@ app.use((req, res, next) => {
   next();
 });
 
-
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.set('view engine', 'ejs');
 
-
-app.use("/api/v1", rootRouter);
-
-app.get('/home', (req, res)=> {
-  res.render('home')
-})
-
-
+app.use('/api/v1', rootRouter);
 
 app.use(serverError);
 

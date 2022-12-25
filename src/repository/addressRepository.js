@@ -1,4 +1,4 @@
-const { EmployeeAddress } = require("../models");
+const { EmployeeAddress } = require('../models');
 
 class AddressRepository {
   constructor() {
@@ -28,6 +28,7 @@ class AddressRepository {
     });
     return result;
   }
+
   async update(address, id) {
     const result = await this._AddressModel.update(address, {
       where: {

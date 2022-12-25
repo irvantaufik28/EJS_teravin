@@ -1,5 +1,6 @@
-const { Op } = require("sequelize");
-const { Employee } = require("../models");
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { Op } = require('sequelize');
+const { Employee } = require('../models');
 
 class EmployeeRepository {
   constructor() {
@@ -53,7 +54,7 @@ class EmployeeRepository {
   async getLastRow(params) {
     return await this.employeeModel.findOne({
       where: params,
-      order: [["createdAt", "desc"]],
+      order: [['createdAt', 'desc']],
     });
   }
 

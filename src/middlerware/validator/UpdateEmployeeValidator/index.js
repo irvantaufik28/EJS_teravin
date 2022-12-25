@@ -13,4 +13,4 @@ const EmployeePayloadValidator = {
   },
 };
 
-module.exports = EmployeePayloadValidator 
+module.exports = EmployeePayloadValidator;
