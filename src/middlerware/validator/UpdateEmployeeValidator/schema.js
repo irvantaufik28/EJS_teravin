@@ -1,6 +1,6 @@
 const Joi = require('joi').extend(require('@joi/date'));
 
-const schema = Joi.object().keys({
+const EmployeePayloadSchema = Joi.object().keys({
   name: Joi.string().required().optional(),
   email: Joi.string().email().required().optional(),
   mobile: Joi.string()
@@ -23,4 +23,4 @@ const schema = Joi.object().keys({
     .label('Address'),
 });
 
-module.exports = { schema };
+module.exports = { EmployeePayloadSchema };
