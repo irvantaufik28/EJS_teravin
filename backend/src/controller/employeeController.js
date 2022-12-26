@@ -1,4 +1,5 @@
 /* eslint-disable radix */
+const _ = require('lodash');
 const resData = require('../helper/response');
 
 module.exports = {
@@ -76,7 +77,7 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      const request = req.body;
+      const request = _.pick(req.body, ['name', 'email', 'mobile', 'birthDate', 'addresses']);
 
       const result = await req.employeeUC.updateEmployee(request, id);
 

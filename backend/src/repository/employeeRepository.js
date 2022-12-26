@@ -59,17 +59,17 @@ class EmployeeRepository {
     });
   }
 
+  async create(data) {
+    const result = await this.employeeModel.create(data);
+    return result;
+  }
+
   async update(data, id) {
     const result = await this.employeeModel.update(data, {
       where: {
         id,
       },
     });
-    return result;
-  }
-
-  async create(data) {
-    const result = await this.employeeModel.create(data);
     return result;
   }
 }

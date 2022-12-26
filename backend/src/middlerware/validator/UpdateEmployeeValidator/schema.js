@@ -19,7 +19,6 @@ const EmployeePayloadSchema = Joi.object().keys({
     )
     .min(1)
     .required()
-    .optional()
     .label('Address'),
 }).options({ abortEarly: false });
 

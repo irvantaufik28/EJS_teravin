@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable radix */
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { Op, Sequelize } = require('sequelize');
@@ -19,6 +20,7 @@ class EmployeeUseCase {
 
     const page = params.page ?? 1;
     const limit = parseInt(params.limit ?? 10);
+
     const offset = parseInt((page - 1) * limit);
     const include = ['addresses'];
     const orderBy = params.orderBy ?? 'createdAt';
@@ -125,7 +127,7 @@ class EmployeeUseCase {
       if (!checkDefault) {
         request.addresses[0].isDefault = true;
       }
-      // eslint-disable-next-line no-restricted-syntax
+
       for (const reqAddress of request.addresses) {
         reqAddress.employeeId = employee.id;
         await this.addressRepository.create(reqAddress);
@@ -145,22 +147,56 @@ class EmployeeUseCase {
     return result;
   }
 
-  async updateEmployee(data, id) {
-    let result = {
+  async updateEmployee(request, id) {
+    const result = {
       isSuccess: false,
       statusCode: 400,
-      reason: null,
+      message: null,
       data: null,
     };
 
     const employee = await this.employeeRepository.getById(id);
     if (employee === null) {
       result.isSuccess = false;
-      result.reason = 'employee not found!';
+      result.message = 'employee not found!';
       return result;
     }
 
-    await this.employeeRepository.update(data, id);
+    await this.employeeRepository.update(request, id);
+
+    if (request.addresses) {
+      const checkDefault = request.addresses.find((o) => o.isDefault === true);
+      if (!checkDefault) {
+        request.addresses[0].isDefault = true;
+      }
+
+      // Remove other id
+      const existAddressIds = request.addresses
+        .filter((o) => o.id)
+        .map((o) => o.id);
+
+      if (existAddressIds.length) {
+        await this.addressRepository.delete({
+          [Op.and]: [
+            {
+              employeeId: employee.id,
+              id: {
+                [Op.notIn]: existAddressIds,
+              },
+            },
+          ],
+        });
+      }
+
+      for (const reqAddress of request.addresses) {
+        reqAddress.employeeId = employee.id;
+        if (reqAddress.id) {
+          await this.addressRepository.update(reqAddress, reqAddress.id);
+        } else {
+          await this.addressRepository.create(reqAddress);
+        }
+      }
+    }
 
     result.isSuccess = true;
     result.statusCode = 201;
@@ -168,21 +204,21 @@ class EmployeeUseCase {
   }
 
   async deleteEmployee(id) {
-    let result = {
+    const result = {
       isSuccess: false,
       statusCode: 400,
-      reason: null,
+      message: null,
       data: null,
     };
 
     const employee = await this.employeeRepository.getById(id);
     if (employee === null) {
+      result.statusCode = 404;
       result.isSuccess = false;
-      result.reason = 'employee not found!';
+      result.message = 'employee not found!';
       return result;
     }
-
-    await this.employeeRepository.delete(id);
+    await employee.destroy();
 
     result.isSuccess = true;
     result.statusCode = 200;
