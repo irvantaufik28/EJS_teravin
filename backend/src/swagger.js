@@ -5,7 +5,7 @@ const doc = {
   info: {
     title: 'PERPUSTAKAAN',
     description:
-      'API ecommerce App for project platinum for customer, create by Maju Jaya',
+      'API Teravin',
     termsOfService: 'http://swagger.io/terms/',
     contact: {
       email: 'irvantaufik28@gmail.com',
